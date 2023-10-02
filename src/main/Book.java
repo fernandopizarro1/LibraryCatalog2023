@@ -74,7 +74,7 @@ public class Book {
 		 * Must return $10(base fee) + $1.5 per additional day
 		 */
 		LocalDate date = LocalDate.of(2023, 9, 15);
-		if(this.lastCheckOut.toEpochDay() - date.toEpochDay() > 31){
+		if(date.toEpochDay() - this.lastCheckOut.toEpochDay()  >= 31){
 			double result = 10 + (1.5 * ( date.toEpochDay() - this.lastCheckOut.toEpochDay() - 31));
 			return (float) result;
 		}
