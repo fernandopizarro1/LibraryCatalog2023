@@ -38,17 +38,14 @@ public class LibraryCatalog {
      * @throws IOException
      */
 	private List<Book> getBooksFromFiles() throws IOException {
-		//Use a buffered reader to read the lines of all the books 
 		BufferedReader reader = new BufferedReader(new FileReader("data\\catalog.csv"));
 		String thisline;
 		try{
 			//Skip first line 
 			reader.readLine();
 			while((thisline = reader.readLine()) != null){
-				//split the line by the comma
-				String[] book_Line = thisline.split(",");
-				//Use each individual part to create a new book
-				this.books.add(new Book(Integer.parseInt(book_Line[0].trim()), book_Line[1].trim(), book_Line[2].trim(), book_Line[3].trim(), LocalDate.parse(book_Line[4].trim()), Boolean.parseBoolean(book_Line[5].trim())));
+				String[] words = thisline.split(",");
+				this.books.add(new Book(Integer.parseInt(words[0].trim()), words[1].trim(), words[2].trim(), words[3].trim(), LocalDate.parse(words[4].trim()), Boolean.parseBoolean(words[5].trim())));
 			}
 			reader.close();
 		} catch (IOException e) {
@@ -64,23 +61,18 @@ public class LibraryCatalog {
      */
 	private List<User> getUsersFromFiles() throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader("data\\user.csv"));
-		//resultList to create the list of the users books, thisline for the readline() of the BufferedReader 
 		List<Book> resultList;
 		String thisline;
 		try{
 			//Skip first line
 			reader.readLine();
 			while((thisline = reader.readLine()) != null){
-				//Split the line using commas to get the appropriate data 
 				String[] line = thisline.split(",");
-				//Create a new ArrayList for the books
 				resultList = new ArrayList<>();
 				//make sure the user has a list of books
 				if(line.length > 2){
-					//Split this list by space to get the respective id's, then add the book with that id to the list
 					String[] list = line[2].split(" ");
 					for(String number : list){
-						//remove curlybrackets from id's
 						int real_id = Integer.parseInt(number.replace("{", "").replace("}", ""));
 						resultList.add(this.books.get(real_id - 1));
 						}
@@ -262,7 +254,6 @@ public class LibraryCatalog {
 			for(Book book : user.getCheckedOutList()){
 				amount += book.calculateFees();
 			}
-			// if amount is positive, then print the user and the amount owed
 			if(amount  > 0){
 				output += user.getName() + "\t\t\t\t\t$" + String.format("%.2f", amount) + "\n";
 			}
@@ -298,9 +289,9 @@ public class LibraryCatalog {
 	 */
 
 	/** this method iterates over the existing library of books
-	 * and searches the books that meet the criteria from the function
+	 * and searches the books that meet the criteria from the lambda function
 	 * 
-	 * @param func - A lambda function that filters the books that meet the criteria from the function
+	 * @param func - A lambda function that filters the books that meets its criteria 
 	 * @return A list of books that meet the criteria from the function
 	 */
 	public List<Book> searchForBook(FilterFunction<Book> func) {
@@ -314,9 +305,9 @@ public class LibraryCatalog {
 	}
 	
 	/**this method iterates over a the existing list of users 
-	 * and searches the books thath meet the criteria from the function 
+	 * and searches the books thath meet the criteria from the lambda function 
 	 * 
-	 * @param func - A lambda function that filters the users that meet the criteria from the function 
+	 * @param func - A lambda function that filters the users that meet its criteria 
 	 * @return A list of the users that meet the criteria
 	 */
 	public List<User> searchForUsers(FilterFunction<User> func) {
