@@ -116,9 +116,10 @@ public class LibraryCatalog {
 
 	/** this method removes a book from the existing list at a given index
 	 * 
-	 * @param id - the id of the book to be removed
+	 * @param id
+	 * @throws IndexOutOfBoundsException
 	 */
-	public void removeBook(int id) {
+	public void removeBook(int id) throws IndexOutOfBoundsException {
 		if(id <= 0 || id > this.books.size()) throw new IndexOutOfBoundsException();
 		this.books.remove(id - 1);
 		return;
@@ -128,8 +129,9 @@ public class LibraryCatalog {
 	 * 
 	 * @param id - the id of the book to be checked out.
 	 * @return true if the book was correctly checked out or false if it was already checked out.
+	 * @throws IndexOutOfBoundsException
 	 */
-	public boolean checkOutBook(int id) {
+	public boolean checkOutBook(int id) throws IndexOutOfBoundsException {
 		if(id <= 0 || id > this.books.size()) throw new IndexOutOfBoundsException();
 		if(this.books.get(id - 1).isCheckedOut()) return false;
 		this.books.get(id - 1).setCheckedOut(true);
@@ -141,22 +143,25 @@ public class LibraryCatalog {
 	 * 
 	 * @param id - the id of the book to be returned. 
 	 * @return true if the book was successfully returned or false if it was already in the library.
+	 * @throws IndexOutOfBoundsException
 	 */
-	public boolean returnBook(int id) {
+	public boolean returnBook(int id) throws IndexOutOfBoundsException {
 		if(id <= 0 || id > this.books.size()) throw new IndexOutOfBoundsException();
 		if(!this.books.get(id - 1).isCheckedOut()) return false;
 		this.books.get(id - 1).setCheckedOut(false);
 		return true;
 	}
 	
-	/** this method reviews if the book is checked out from the library. 
+	/** this method reviews if the book is available in the library. Being available is the opposite of being
+	 * checked out from the library.
 	 * 
 	 * @param id - the id of the book to review if checked out
-	 * @return true if the book is checked out from the library
+	 * @return true if the book is available in the library
+	 * @throws IndexOutOfBoundsException
 	 */
-	public boolean getBookAvailability(int id) {
+	public boolean getBookAvailability(int id) throws IndexOutOfBoundsException {
 		if(id <= 0 || id > this.books.size()) throw new IndexOutOfBoundsException();
-        return this.books.get(id - 1).isCheckedOut();
+        return !this.books.get(id - 1).isCheckedOut();
 	}
 
 	/** this method counts the number of books in the library with the given title
@@ -217,7 +222,7 @@ public class LibraryCatalog {
 		 * 
 		 * PLACE CODE HERE
 		 */
-		List<Book> available_books = searchForBook(x -> this.getBookAvailability(x.getId()) == true);
+		List<Book> available_books = searchForBook(x -> this.getBookAvailability(x.getId()) == false);
 		for(Book book : available_books){
 				output += book.toString() + "\n";
 		}
